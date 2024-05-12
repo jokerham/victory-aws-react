@@ -1,0 +1,42 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-victory-dev-215317-authRole",
+      "UnauthRoleArn": "arn:aws:iam::694284123883:role/amplify-victory-dev-215317-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::694284123883:role/amplify-victory-dev-215317-authRole",
+      "Region": "ap-northeast-2",
+      "DeploymentBucketName": "amplify-victory-dev-215317-deployment",
+      "UnauthRoleName": "amplify-victory-dev-215317-unauthRole",
+      "StackName": "amplify-victory-dev-215317",
+      "StackId": "arn:aws:cloudformation:ap-northeast-2:694284123883:stack/amplify-victory-dev-215317/9b7eeed0-8b91-11ee-90a2-02d0c9ef3ab8",
+      "AmplifyAppId": "d2on2dgggqhiyb"
+    },
+    "categories": {
+      "auth": {
+        "victory3d3c1f40": {}
+      },
+      "api": {
+        "victory": {}
+      },
+      "storage": {
+        "images": {}
+      },
+      "function": {
+        "dashboardHeaderCounts": {
+          "deploymentBucketName": "amplify-victory-dev-215317-deployment",
+          "s3Key": "amplify-builds/dashboardHeaderCounts-2b35567664466d643861-build.zip"
+        },
+        "createMatches": {
+          "deploymentBucketName": "amplify-victory-dev-215317-deployment",
+          "s3Key": "amplify-builds/createMatches-365068656a3572676871-build.zip"
+        }
+      },
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "d2on2dgggqhiyb",
+          "type": "manual"
+        }
+      }
+    }
+  }
+}
