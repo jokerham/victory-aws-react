@@ -5,7 +5,7 @@ input AMPLIFY { globalAuthRule: AuthRule = { allow: public } } # FOR TESTING ONL
 ################################################################################################
 # Institute Model
 ################################################################################################
-  type Institute @model
+  type Institute @model @searchable
   @auth(
     rules: [
       { allow: groups, groups: ["admin"], operations: [create, update, delete] },
@@ -22,7 +22,7 @@ input AMPLIFY { globalAuthRule: AuthRule = { allow: public } } # FOR TESTING ONL
 ################################################################################################
 # Member Model
 ################################################################################################
-  type Member @model
+  type Member @model @searchable
   @auth(
     rules: [
       { allow: groups, groups: ["admin"], operations: [create, update, delete] },
@@ -55,7 +55,7 @@ input AMPLIFY { globalAuthRule: AuthRule = { allow: public } } # FOR TESTING ONL
 ################################################################################################
 # CodeDetail Model
 ################################################################################################
-  type CodeDetail @model
+  type CodeDetail @model @searchable
   @auth(
     rules: [
       { allow: groups, groups: ["admin"] ,operations: [read, create, update, delete] },
@@ -70,7 +70,7 @@ input AMPLIFY { globalAuthRule: AuthRule = { allow: public } } # FOR TESTING ONL
 ################################################################################################
 # Tournament Model
 ################################################################################################
-  type Tournament @model
+  type Tournament @model @searchable
   @auth(
     rules: [
       { allow: groups, groups: ["admin"], operations: [read, create, update, delete] },
@@ -87,7 +87,7 @@ input AMPLIFY { globalAuthRule: AuthRule = { allow: public } } # FOR TESTING ONL
 ################################################################################################
 # Match Model
 ################################################################################################
-  type Match @model
+  type Match @model @searchable
   @auth(
     rules: [
       { allow: groups, groups: ["admin"], operations: [read, create, update, delete] },
@@ -104,11 +104,11 @@ input AMPLIFY { globalAuthRule: AuthRule = { allow: public } } # FOR TESTING ONL
 ################################################################################################
 # Types
 ################################################################################################
-  # type LambdaResultAdmin
-  # {
-  #   statusCode: Int @auth( rules: [ { allow: groups groups: ["admin"] } ] )
-  #   body: String @auth( rules: [ { allow: groups groups: ["admin"] } ] )
-  # }
+  type LambdaResultAdmin
+  {
+    statusCode: Int @auth( rules: [ { allow: groups groups: ["admin"] } ] )
+    body: String @auth( rules: [ { allow: groups groups: ["admin"] } ] )
+  }
 
   # type LambdaResultPublic
   # {
@@ -119,61 +119,28 @@ input AMPLIFY { globalAuthRule: AuthRule = { allow: public } } # FOR TESTING ONL
 ################################################################################################
 # Inputs
 ################################################################################################
-  # input BatchApproveMembersInput {
-  #   membersIds: [String]
-  # }
+  input BatchCreateMatchesInput {
+    tournamentId: String!
+    matchType: String!
+    tournamentType: String!
+    duration: Int!
+    rounds: Int!
+    startWeight: Int!
+    endWeight: Int!
+    unit: Int!
+  }
 
-  # input BatchCreateMatchesInput {
-  #   tournamentId: String!
-  #   matchType: String!
-  #   tournamentType: String!
-  #   duration: Int!
-  #   rounds: Int!
-  #   startWeight: Int!
-  #   endWeight: Int!
-  #   unit: Int!
-  # }
-
-  # input ImportInstituteInput {
-  #   id: String!
-  #   sport: String!
-  #   title: String!
-  #   location: String
-  # }
-
-  # input ImportMemberInput {
-  #   id: String!
-  #   name: String!
-  #   email: String!
-  #   contact: String
-  #   sport: String
-  #   instituteName: String
-  #   instituteLocation: String
-  #   approved: String
-  # }
 ################################################################################################
 # Custom Queries
 ################################################################################################
 ################################################################################################
 # Custom Mutations
 ################################################################################################
-  # type Mutation {
-  #   importInstitutes(input: [ImportInstituteInput]) : LambdaResultAdmin
-  #     @function(name: "importInstitutes-${env}")
-  #     @auth( rules: [ { allow: groups, groups: ["admin"] } ] )
-
-  #   importMembers(input: [ImportMemberInput]) : LambdaResultAdmin
-  #     @function(name: "importMembers-${env}")
-  #     @auth( rules: [ { allow: groups, groups: ["admin"] } ] )
-
-  #   batchApproveMembers(input: BatchApproveMembersInput) : LambdaResultAdmin
-  #     @function(name: "batchApproveMembers-${env}")
-  #     @auth( rules: [ { allow: groups, groups: ["admin"] } ] )
-
-  #   batchCreateMatches(input: BatchCreateMatchesInput) : LambdaResultAdmin
-  #     @function(name: "createMatches-${env}")
-  #     @auth( rules: [ { allow: groups, groups: ["admin"] } ] )
-  # }
+  type Mutation {
+    batchCreateMatches(input: BatchCreateMatchesInput) : LambdaResultAdmin
+      @function(name: "createMatches-${env}")
+      @auth( rules: [ { allow: groups, groups: ["admin"] } ] )
+  }
 
 # https://medium.com/@jan.hesters/creating-graphql-batch-operations-for-aws-amplify-with-appsync-and-cognito-ecee6938e8ee
 

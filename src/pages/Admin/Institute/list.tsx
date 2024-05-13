@@ -140,7 +140,7 @@ const InstituteListPage = () => {
       expressionAttributeNames: {"#sport": "sport"},
       expressionAttributeValues: { ":sport": "boxing" }
     },
-    name: "listInstitutesWithRepresentativeName"
+    name: "listInstitutes"
   }
 
   const sortBy = ["title","location"]

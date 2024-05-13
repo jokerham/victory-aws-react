@@ -1,7 +1,7 @@
 import { useEffect, useState }  from 'react'
 import { getCurrentUser } from '@aws-amplify/auth'
 import { generateClient } from '@aws-amplify/api'
-//import { dashboardHeaderCounts } from 'graphql/queries'
+import { searchInstitutes, searchMembers, searchTournaments } from 'graphql/queries'
 
 import 'configureAmplify'
 
@@ -11,7 +11,6 @@ export default function DashboardHeader() {
   const [instituteCount, setInstituteCount] = useState(0)
   const [tournamentCount, setTournamentCount] = useState(0)
   const today = new Date();
-  const client = generateClient()
   
   const getUserData = async () => {
     const user = await getCurrentUser()
@@ -19,25 +18,59 @@ export default function DashboardHeader() {
       setUsername(user.username)
   }
 
-  const getCountInfo = async() => {
-    // try {
-    //   const result: any = await client.graphql({
-    //     query: dashboardHeaderCounts,
-    //     authMode: 'userPool'
-    //   })
-    //   const counts = result.data.dashboardHeaderCounts
-    //   setMemberCount(counts[0])
-    //   setInstituteCount(counts[1])
-    //   setTournamentCount(counts[2])
-    // } catch (error) {
-    //   console.log(error)
-    // }
+  const getInstituteCountInfo = async() => {
+    const client = generateClient()
+    
+    const query = {
+      query: searchInstitutes,
+      aggregates: {
+        name: 'total',
+        type: 'terms',
+        value: 'id'
+      }
+    }
+
+    const result: any = await client.graphql(query)
+    setInstituteCount(result.data.searchInstitutes.total ?? 0)
+  }
+
+  const getMemberCountInfo = async() => {
+    const client = generateClient()
+    
+    const query = {
+      query: searchMembers,
+      aggregates: {
+        name: 'total',
+        type: 'terms',
+        value: 'id'
+      }
+    }
+
+    const result: any = await client.graphql(query)
+    setMemberCount(result.data.searchMembers.total ?? 0)
+  }
+
+  const getTournamentCountInfo = async() => {
+    const client = generateClient()
+    
+    const query = {
+      query: searchTournaments,
+      aggregates: {
+        name: 'total',
+        type: 'terms',
+        value: 'id'
+      }
+    }
+
+    const result: any = await client.graphql(query)
+    setTournamentCount(result.data.searchTournaments.total ?? 0)
   }
   
   useEffect(() => {
     getUserData()
-    getCountInfo()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    getInstituteCountInfo()
+    getMemberCountInfo()
+    getTournamentCountInfo()
   }, [])
   
   return (
@@ -49,14 +82,14 @@ export default function DashboardHeader() {
         </div>
         <div className="quickview">
           <div className="quickview__item">
-            <div className="quickview__item-total">{memberCount}</div>
+            <div className="quickview__item-total">{instituteCount}</div>
             <div className="quickview__item-description">
               <i className="far fa-calendar-alt"></i>
               <span className="text-light">단체수</span>
             </div>
           </div>
           <div className="quickview__item">
-            <div className="quickview__item-total">{instituteCount}</div>
+            <div className="quickview__item-total">{memberCount}</div>
             <div className="quickview__item-description">
               <i className="far fa-calendar-alt"></i>
               <span className="text-light">회원수</span>

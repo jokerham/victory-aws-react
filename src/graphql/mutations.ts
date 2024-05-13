@@ -596,3 +596,14 @@ export const deleteMatch = /* GraphQL */ `mutation DeleteMatch(
   APITypes.DeleteMatchMutationVariables,
   APITypes.DeleteMatchMutation
 >;
+export const batchCreateMatches = /* GraphQL */ `mutation BatchCreateMatches($input: BatchCreateMatchesInput) {
+  batchCreateMatches(input: $input) {
+    statusCode
+    body
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.BatchCreateMatchesMutationVariables,
+  APITypes.BatchCreateMatchesMutation
+>;

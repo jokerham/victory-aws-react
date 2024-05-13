@@ -443,6 +443,231 @@ export type DeleteMatchInput = {
   id: string,
 };
 
+export type BatchCreateMatchesInput = {
+  tournamentId: string,
+  matchType: string,
+  tournamentType: string,
+  duration: number,
+  rounds: number,
+  startWeight: number,
+  endWeight: number,
+  unit: number,
+};
+
+export type LambdaResultAdmin = {
+  __typename: "LambdaResultAdmin",
+  statusCode?: number | null,
+  body?: string | null,
+};
+
+export type SearchableInstituteFilterInput = {
+  id?: SearchableIDFilterInput | null,
+  sport?: SearchableStringFilterInput | null,
+  title?: SearchableStringFilterInput | null,
+  location?: SearchableStringFilterInput | null,
+  createdAt?: SearchableStringFilterInput | null,
+  updatedAt?: SearchableStringFilterInput | null,
+  instituteRepresentativeId?: SearchableIDFilterInput | null,
+  and?: Array< SearchableInstituteFilterInput | null > | null,
+  or?: Array< SearchableInstituteFilterInput | null > | null,
+  not?: SearchableInstituteFilterInput | null,
+};
+
+export type SearchableIDFilterInput = {
+  ne?: string | null,
+  gt?: string | null,
+  lt?: string | null,
+  gte?: string | null,
+  lte?: string | null,
+  eq?: string | null,
+  match?: string | null,
+  matchPhrase?: string | null,
+  matchPhrasePrefix?: string | null,
+  multiMatch?: string | null,
+  exists?: boolean | null,
+  wildcard?: string | null,
+  regexp?: string | null,
+  range?: Array< string | null > | null,
+};
+
+export type SearchableStringFilterInput = {
+  ne?: string | null,
+  gt?: string | null,
+  lt?: string | null,
+  gte?: string | null,
+  lte?: string | null,
+  eq?: string | null,
+  match?: string | null,
+  matchPhrase?: string | null,
+  matchPhrasePrefix?: string | null,
+  multiMatch?: string | null,
+  exists?: boolean | null,
+  wildcard?: string | null,
+  regexp?: string | null,
+  range?: Array< string | null > | null,
+};
+
+export type SearchableInstituteSortInput = {
+  field?: SearchableInstituteSortableFields | null,
+  direction?: SearchableSortDirection | null,
+};
+
+export enum SearchableInstituteSortableFields {
+  id = "id",
+  sport = "sport",
+  title = "title",
+  location = "location",
+  createdAt = "createdAt",
+  updatedAt = "updatedAt",
+  instituteRepresentativeId = "instituteRepresentativeId",
+}
+
+
+export enum SearchableSortDirection {
+  asc = "asc",
+  desc = "desc",
+}
+
+
+export type SearchableInstituteAggregationInput = {
+  name: string,
+  type: SearchableAggregateType,
+  field: SearchableInstituteAggregateField,
+};
+
+export enum SearchableAggregateType {
+  terms = "terms",
+  avg = "avg",
+  min = "min",
+  max = "max",
+  sum = "sum",
+  cardinality = "cardinality",
+}
+
+
+export enum SearchableInstituteAggregateField {
+  id = "id",
+  sport = "sport",
+  title = "title",
+  location = "location",
+  createdAt = "createdAt",
+  updatedAt = "updatedAt",
+  instituteRepresentativeId = "instituteRepresentativeId",
+}
+
+
+export type SearchableInstituteConnection = {
+  __typename: "SearchableInstituteConnection",
+  items:  Array<Institute | null >,
+  nextToken?: string | null,
+  total?: number | null,
+  aggregateItems:  Array<SearchableAggregateResult | null >,
+};
+
+export type SearchableAggregateResult = {
+  __typename: "SearchableAggregateResult",
+  name: string,
+  result?: SearchableAggregateGenericResult | null,
+};
+
+export type SearchableAggregateGenericResult = SearchableAggregateScalarResult | SearchableAggregateBucketResult
+
+
+export type SearchableAggregateScalarResult = {
+  __typename: "SearchableAggregateScalarResult",
+  value: number,
+};
+
+export type SearchableAggregateBucketResult = {
+  __typename: "SearchableAggregateBucketResult",
+  buckets?:  Array<SearchableAggregateBucketResultItem | null > | null,
+};
+
+export type SearchableAggregateBucketResultItem = {
+  __typename: "SearchableAggregateBucketResultItem",
+  key: string,
+  doc_count: number,
+};
+
+export type SearchableMemberFilterInput = {
+  id?: SearchableIDFilterInput | null,
+  congnitoId?: SearchableStringFilterInput | null,
+  name?: SearchableStringFilterInput | null,
+  email?: SearchableStringFilterInput | null,
+  contact?: SearchableStringFilterInput | null,
+  weight?: SearchableFloatFilterInput | null,
+  approved?: SearchableStringFilterInput | null,
+  profileImageUrl?: SearchableStringFilterInput | null,
+  createdAt?: SearchableStringFilterInput | null,
+  updatedAt?: SearchableStringFilterInput | null,
+  instituteMembersId?: SearchableIDFilterInput | null,
+  memberInstituteId?: SearchableIDFilterInput | null,
+  and?: Array< SearchableMemberFilterInput | null > | null,
+  or?: Array< SearchableMemberFilterInput | null > | null,
+  not?: SearchableMemberFilterInput | null,
+};
+
+export type SearchableFloatFilterInput = {
+  ne?: number | null,
+  gt?: number | null,
+  lt?: number | null,
+  gte?: number | null,
+  lte?: number | null,
+  eq?: number | null,
+  range?: Array< number | null > | null,
+};
+
+export type SearchableMemberSortInput = {
+  field?: SearchableMemberSortableFields | null,
+  direction?: SearchableSortDirection | null,
+};
+
+export enum SearchableMemberSortableFields {
+  id = "id",
+  congnitoId = "congnitoId",
+  name = "name",
+  email = "email",
+  contact = "contact",
+  weight = "weight",
+  approved = "approved",
+  profileImageUrl = "profileImageUrl",
+  createdAt = "createdAt",
+  updatedAt = "updatedAt",
+  instituteMembersId = "instituteMembersId",
+  memberInstituteId = "memberInstituteId",
+}
+
+
+export type SearchableMemberAggregationInput = {
+  name: string,
+  type: SearchableAggregateType,
+  field: SearchableMemberAggregateField,
+};
+
+export enum SearchableMemberAggregateField {
+  id = "id",
+  congnitoId = "congnitoId",
+  name = "name",
+  email = "email",
+  contact = "contact",
+  weight = "weight",
+  approved = "approved",
+  profileImageUrl = "profileImageUrl",
+  createdAt = "createdAt",
+  updatedAt = "updatedAt",
+  instituteMembersId = "instituteMembersId",
+  memberInstituteId = "memberInstituteId",
+}
+
+
+export type SearchableMemberConnection = {
+  __typename: "SearchableMemberConnection",
+  items:  Array<Member | null >,
+  nextToken?: string | null,
+  total?: number | null,
+  aggregateItems:  Array<SearchableAggregateResult | null >,
+};
+
 export type ModelCodeTableFilterInput = {
   id?: ModelIDInput | null,
   name?: ModelStringInput | null,
@@ -472,6 +697,70 @@ export type ModelCodeDetailFilterInput = {
   codeTableDetailsId?: ModelIDInput | null,
 };
 
+export type SearchableCodeDetailFilterInput = {
+  id?: SearchableIDFilterInput | null,
+  name?: SearchableStringFilterInput | null,
+  value?: SearchableStringFilterInput | null,
+  sortOrder?: SearchableIntFilterInput | null,
+  createdAt?: SearchableStringFilterInput | null,
+  updatedAt?: SearchableStringFilterInput | null,
+  codeTableDetailsId?: SearchableIDFilterInput | null,
+  and?: Array< SearchableCodeDetailFilterInput | null > | null,
+  or?: Array< SearchableCodeDetailFilterInput | null > | null,
+  not?: SearchableCodeDetailFilterInput | null,
+};
+
+export type SearchableIntFilterInput = {
+  ne?: number | null,
+  gt?: number | null,
+  lt?: number | null,
+  gte?: number | null,
+  lte?: number | null,
+  eq?: number | null,
+  range?: Array< number | null > | null,
+};
+
+export type SearchableCodeDetailSortInput = {
+  field?: SearchableCodeDetailSortableFields | null,
+  direction?: SearchableSortDirection | null,
+};
+
+export enum SearchableCodeDetailSortableFields {
+  id = "id",
+  name = "name",
+  value = "value",
+  sortOrder = "sortOrder",
+  createdAt = "createdAt",
+  updatedAt = "updatedAt",
+  codeTableDetailsId = "codeTableDetailsId",
+}
+
+
+export type SearchableCodeDetailAggregationInput = {
+  name: string,
+  type: SearchableAggregateType,
+  field: SearchableCodeDetailAggregateField,
+};
+
+export enum SearchableCodeDetailAggregateField {
+  id = "id",
+  name = "name",
+  value = "value",
+  sortOrder = "sortOrder",
+  createdAt = "createdAt",
+  updatedAt = "updatedAt",
+  codeTableDetailsId = "codeTableDetailsId",
+}
+
+
+export type SearchableCodeDetailConnection = {
+  __typename: "SearchableCodeDetailConnection",
+  items:  Array<CodeDetail | null >,
+  nextToken?: string | null,
+  total?: number | null,
+  aggregateItems:  Array<SearchableAggregateResult | null >,
+};
+
 export type ModelTournamentFilterInput = {
   id?: ModelIDInput | null,
   title?: ModelStringInput | null,
@@ -492,6 +781,63 @@ export type ModelTournamentConnection = {
   nextToken?: string | null,
 };
 
+export type SearchableTournamentFilterInput = {
+  id?: SearchableIDFilterInput | null,
+  title?: SearchableStringFilterInput | null,
+  location?: SearchableStringFilterInput | null,
+  eventDate?: SearchableStringFilterInput | null,
+  dueDate?: SearchableStringFilterInput | null,
+  rings?: SearchableIntFilterInput | null,
+  createdAt?: SearchableStringFilterInput | null,
+  updatedAt?: SearchableStringFilterInput | null,
+  and?: Array< SearchableTournamentFilterInput | null > | null,
+  or?: Array< SearchableTournamentFilterInput | null > | null,
+  not?: SearchableTournamentFilterInput | null,
+};
+
+export type SearchableTournamentSortInput = {
+  field?: SearchableTournamentSortableFields | null,
+  direction?: SearchableSortDirection | null,
+};
+
+export enum SearchableTournamentSortableFields {
+  id = "id",
+  title = "title",
+  location = "location",
+  eventDate = "eventDate",
+  dueDate = "dueDate",
+  rings = "rings",
+  createdAt = "createdAt",
+  updatedAt = "updatedAt",
+}
+
+
+export type SearchableTournamentAggregationInput = {
+  name: string,
+  type: SearchableAggregateType,
+  field: SearchableTournamentAggregateField,
+};
+
+export enum SearchableTournamentAggregateField {
+  id = "id",
+  title = "title",
+  location = "location",
+  eventDate = "eventDate",
+  dueDate = "dueDate",
+  rings = "rings",
+  createdAt = "createdAt",
+  updatedAt = "updatedAt",
+}
+
+
+export type SearchableTournamentConnection = {
+  __typename: "SearchableTournamentConnection",
+  items:  Array<Tournament | null >,
+  nextToken?: string | null,
+  total?: number | null,
+  aggregateItems:  Array<SearchableAggregateResult | null >,
+};
+
 export type ModelMatchFilterInput = {
   id?: ModelIDInput | null,
   weight?: ModelFloatInput | null,
@@ -505,6 +851,66 @@ export type ModelMatchFilterInput = {
   tournamentMatchesId?: ModelIDInput | null,
   matchMatchTypeId?: ModelIDInput | null,
   matchTournamentTypeId?: ModelIDInput | null,
+};
+
+export type SearchableMatchFilterInput = {
+  id?: SearchableIDFilterInput | null,
+  weight?: SearchableFloatFilterInput | null,
+  duration?: SearchableIntFilterInput | null,
+  rounds?: SearchableIntFilterInput | null,
+  createdAt?: SearchableStringFilterInput | null,
+  updatedAt?: SearchableStringFilterInput | null,
+  tournamentMatchesId?: SearchableIDFilterInput | null,
+  matchMatchTypeId?: SearchableIDFilterInput | null,
+  matchTournamentTypeId?: SearchableIDFilterInput | null,
+  and?: Array< SearchableMatchFilterInput | null > | null,
+  or?: Array< SearchableMatchFilterInput | null > | null,
+  not?: SearchableMatchFilterInput | null,
+};
+
+export type SearchableMatchSortInput = {
+  field?: SearchableMatchSortableFields | null,
+  direction?: SearchableSortDirection | null,
+};
+
+export enum SearchableMatchSortableFields {
+  id = "id",
+  weight = "weight",
+  duration = "duration",
+  rounds = "rounds",
+  createdAt = "createdAt",
+  updatedAt = "updatedAt",
+  tournamentMatchesId = "tournamentMatchesId",
+  matchMatchTypeId = "matchMatchTypeId",
+  matchTournamentTypeId = "matchTournamentTypeId",
+}
+
+
+export type SearchableMatchAggregationInput = {
+  name: string,
+  type: SearchableAggregateType,
+  field: SearchableMatchAggregateField,
+};
+
+export enum SearchableMatchAggregateField {
+  id = "id",
+  weight = "weight",
+  duration = "duration",
+  rounds = "rounds",
+  createdAt = "createdAt",
+  updatedAt = "updatedAt",
+  tournamentMatchesId = "tournamentMatchesId",
+  matchMatchTypeId = "matchMatchTypeId",
+  matchTournamentTypeId = "matchTournamentTypeId",
+}
+
+
+export type SearchableMatchConnection = {
+  __typename: "SearchableMatchConnection",
+  items:  Array<Match | null >,
+  nextToken?: string | null,
+  total?: number | null,
+  aggregateItems:  Array<SearchableAggregateResult | null >,
 };
 
 export type ModelSubscriptionInstituteFilterInput = {
@@ -1260,6 +1666,18 @@ export type DeleteMatchMutation = {
   } | null,
 };
 
+export type BatchCreateMatchesMutationVariables = {
+  input?: BatchCreateMatchesInput | null,
+};
+
+export type BatchCreateMatchesMutation = {
+  batchCreateMatches?:  {
+    __typename: "LambdaResultAdmin",
+    statusCode?: number | null,
+    body?: string | null,
+  } | null,
+};
+
 export type GetInstituteQueryVariables = {
   id: string,
 };
@@ -1318,6 +1736,50 @@ export type ListInstitutesQuery = {
       representativeId?: string | null,
     } | null >,
     nextToken?: string | null,
+  } | null,
+};
+
+export type SearchInstitutesQueryVariables = {
+  filter?: SearchableInstituteFilterInput | null,
+  sort?: Array< SearchableInstituteSortInput | null > | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  from?: number | null,
+  aggregates?: Array< SearchableInstituteAggregationInput | null > | null,
+};
+
+export type SearchInstitutesQuery = {
+  searchInstitutes?:  {
+    __typename: "SearchableInstituteConnection",
+    items:  Array< {
+      __typename: "Institute",
+      id: string,
+      sport: string,
+      title: string,
+      location?: string | null,
+      createdAt: string,
+      updatedAt: string,
+      instituteRepresentativeId?: string | null,
+      representativeId?: string | null,
+    } | null >,
+    nextToken?: string | null,
+    total?: number | null,
+    aggregateItems:  Array< {
+      __typename: "SearchableAggregateResult",
+      name: string,
+      result: ( {
+          __typename: "SearchableAggregateScalarResult",
+          value: number,
+        } | {
+          __typename: "SearchableAggregateBucketResult",
+          buckets?:  Array< {
+            __typename: string,
+            key: string,
+            doc_count: number,
+          } | null > | null,
+        }
+      ) | null,
+    } | null >,
   } | null,
 };
 
@@ -1413,6 +1875,54 @@ export type ListMembersByApprovedQuery = {
   } | null,
 };
 
+export type SearchMembersQueryVariables = {
+  filter?: SearchableMemberFilterInput | null,
+  sort?: Array< SearchableMemberSortInput | null > | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  from?: number | null,
+  aggregates?: Array< SearchableMemberAggregationInput | null > | null,
+};
+
+export type SearchMembersQuery = {
+  searchMembers?:  {
+    __typename: "SearchableMemberConnection",
+    items:  Array< {
+      __typename: "Member",
+      id: string,
+      congnitoId?: string | null,
+      name: string,
+      email: string,
+      contact?: string | null,
+      weight?: number | null,
+      approved?: string | null,
+      profileImageUrl?: string | null,
+      createdAt: string,
+      updatedAt: string,
+      instituteMembersId?: string | null,
+      memberInstituteId?: string | null,
+    } | null >,
+    nextToken?: string | null,
+    total?: number | null,
+    aggregateItems:  Array< {
+      __typename: "SearchableAggregateResult",
+      name: string,
+      result: ( {
+          __typename: "SearchableAggregateScalarResult",
+          value: number,
+        } | {
+          __typename: "SearchableAggregateBucketResult",
+          buckets?:  Array< {
+            __typename: string,
+            key: string,
+            doc_count: number,
+          } | null > | null,
+        }
+      ) | null,
+    } | null >,
+  } | null,
+};
+
 export type GetCodeTableQueryVariables = {
   id: string,
 };
@@ -1498,6 +2008,49 @@ export type ListCodeDetailsQuery = {
   } | null,
 };
 
+export type SearchCodeDetailsQueryVariables = {
+  filter?: SearchableCodeDetailFilterInput | null,
+  sort?: Array< SearchableCodeDetailSortInput | null > | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  from?: number | null,
+  aggregates?: Array< SearchableCodeDetailAggregationInput | null > | null,
+};
+
+export type SearchCodeDetailsQuery = {
+  searchCodeDetails?:  {
+    __typename: "SearchableCodeDetailConnection",
+    items:  Array< {
+      __typename: "CodeDetail",
+      id: string,
+      name: string,
+      value: string,
+      sortOrder: number,
+      createdAt: string,
+      updatedAt: string,
+      codeTableDetailsId?: string | null,
+    } | null >,
+    nextToken?: string | null,
+    total?: number | null,
+    aggregateItems:  Array< {
+      __typename: "SearchableAggregateResult",
+      name: string,
+      result: ( {
+          __typename: "SearchableAggregateScalarResult",
+          value: number,
+        } | {
+          __typename: "SearchableAggregateBucketResult",
+          buckets?:  Array< {
+            __typename: string,
+            key: string,
+            doc_count: number,
+          } | null > | null,
+        }
+      ) | null,
+    } | null >,
+  } | null,
+};
+
 export type GetTournamentQueryVariables = {
   id: string,
 };
@@ -1541,6 +2094,50 @@ export type ListTournamentsQuery = {
       updatedAt: string,
     } | null >,
     nextToken?: string | null,
+  } | null,
+};
+
+export type SearchTournamentsQueryVariables = {
+  filter?: SearchableTournamentFilterInput | null,
+  sort?: Array< SearchableTournamentSortInput | null > | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  from?: number | null,
+  aggregates?: Array< SearchableTournamentAggregationInput | null > | null,
+};
+
+export type SearchTournamentsQuery = {
+  searchTournaments?:  {
+    __typename: "SearchableTournamentConnection",
+    items:  Array< {
+      __typename: "Tournament",
+      id: string,
+      title: string,
+      location?: string | null,
+      eventDate?: string | null,
+      dueDate?: string | null,
+      rings?: number | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+    total?: number | null,
+    aggregateItems:  Array< {
+      __typename: "SearchableAggregateResult",
+      name: string,
+      result: ( {
+          __typename: "SearchableAggregateScalarResult",
+          value: number,
+        } | {
+          __typename: "SearchableAggregateBucketResult",
+          buckets?:  Array< {
+            __typename: string,
+            key: string,
+            doc_count: number,
+          } | null > | null,
+        }
+      ) | null,
+    } | null >,
   } | null,
 };
 
@@ -1616,6 +2213,51 @@ export type ListMatchesQuery = {
       matchTournamentTypeId?: string | null,
     } | null >,
     nextToken?: string | null,
+  } | null,
+};
+
+export type SearchMatchesQueryVariables = {
+  filter?: SearchableMatchFilterInput | null,
+  sort?: Array< SearchableMatchSortInput | null > | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  from?: number | null,
+  aggregates?: Array< SearchableMatchAggregationInput | null > | null,
+};
+
+export type SearchMatchesQuery = {
+  searchMatches?:  {
+    __typename: "SearchableMatchConnection",
+    items:  Array< {
+      __typename: "Match",
+      id: string,
+      weight: number,
+      duration?: number | null,
+      rounds?: number | null,
+      createdAt: string,
+      updatedAt: string,
+      tournamentMatchesId?: string | null,
+      matchMatchTypeId?: string | null,
+      matchTournamentTypeId?: string | null,
+    } | null >,
+    nextToken?: string | null,
+    total?: number | null,
+    aggregateItems:  Array< {
+      __typename: "SearchableAggregateResult",
+      name: string,
+      result: ( {
+          __typename: "SearchableAggregateScalarResult",
+          value: number,
+        } | {
+          __typename: "SearchableAggregateBucketResult",
+          buckets?:  Array< {
+            __typename: string,
+            key: string,
+            doc_count: number,
+          } | null > | null,
+        }
+      ) | null,
+    } | null >,
   } | null,
 };
 

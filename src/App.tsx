@@ -7,12 +7,12 @@ import {
   InstituteDetailPage,
   MemberListPage,
   MemberDetailPage,
-  // TournamentListPage,
-  // TournamentDetailPage,
-  // MatchListPage,
-  // MatchDetailPage,
-  // MatchingPage,
-  // CreateMatchPage
+  TournamentListPage,
+  TournamentDetailPage,
+  MatchListPage,
+  MatchDetailPage,
+  MatchingPage,
+  CreateMatchPage
 } from './pages'
 
 function App() {
@@ -30,6 +30,15 @@ function App() {
           <Route path="unapproved" element={<MemberListPage params={{approved: 'unapproved'}} key="unapproved" />} />
           <Route path=":id/" element={<MemberDetailPage />} />
         </Route>
+        <Route path="tournament/*">
+          <Route path="list/" element={<TournamentListPage />} />
+          <Route path=":id/" element={<TournamentDetailPage />} />
+          <Route path="matches/*">
+            <Route path=":id/" element={<MatchListPage />} />
+            <Route path="match/:id/" element={<MatchDetailPage />} />
+            <Route path="new/:id/" element={<CreateMatchPage />} />
+          </Route>
+        </Route>
       </Route>
     </Routes>
   )
@@ -37,11 +46,6 @@ function App() {
 
 /*
 
-        <Route path="member/*">
-          <Route path="approved" element={<MemberListPage params={{approved: 'approved'}} key="approved"/>} />
-          <Route path="unapproved" element={<MemberListPage params={{approved: 'unapproved'}} key="unapproved" />} />
-          <Route path=":id/" element={<MemberDetailPage />} />
-        </Route>
         <Route path="tournament/*">
           <Route path="list/" element={<TournamentListPage />} />
           <Route path=":id/" element={<TournamentDetailPage />} />
