@@ -67,3 +67,37 @@ export const listInstitutesWithRepresentativeName = /* GraphQL */ `query listIns
   APITypes.ListInstitutesQueryVariables,
   APITypes.ListInstitutesQuery
 >;
+
+export const listMatchesWithCodeDetails = /* GraphQL */ `query listMatchesWithCodeDetails(
+  $filter: ModelMatchFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listMatches(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      weight
+      duration
+      rounds
+      createdAt
+      updatedAt
+      tournamentMatchesId
+      matchMatchTypeId
+      matchTournamentTypeId
+      matchType {
+        name
+        sortOrder
+      }
+      tournamentType {
+        name
+      }
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.ListMatchesQueryVariables,
+  APITypes.ListMatchesQuery
+>;

@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { generateClient } from '@aws-amplify/api'
 import { Match, Tournament } from 'API'
-import { getTournament, listMatches } from 'graphql/queries'
+import { listMatchesWithCodeDetails } from 'graphql/customQueries'
+import { getTournament } from 'graphql/queries'
 import { deleteMatch } from 'graphql/mutations'
 import { FcInspection } from 'react-icons/fc'
 import { GiBoxingGlove} from 'react-icons/gi'
@@ -28,11 +29,11 @@ const MatchListPage = () => {
 
   const columns = [
     { name: 'id', selector: (row: Match) => row.id, omit: true },
-    //{ name: 'tournamentId', selector: (row: Match) => row.tournament?.id, omit: true },
-    //{ name: '대전 종별', selector: (row: Match) => row.matchType, sortable: true, grow: 1 },
-    //{ name: '경기 방식', selector: (row: Match) => row.tournamentType, sortable: true, grow: 1 },
-    { name: '체급', selector: (row: Match) => row.weight, sortable: true, grow: 1 },
-    { name: '경기 시간', selector: (row: Match) => row.duration, sortable: true, grow: 1 },
+    { name: 'tournamentId', selector: (row: Match) => row.tournament?.id, omit: true },
+    { name: '대전 종별', selector: (row: Match) => row.matchType?.name, sortable: true, grow: 1 },
+    { name: '경기 방식', selector: (row: Match) => row.tournamentType?.name, sortable: true, grow: 1 },
+    { name: '체급 (Kg)', selector: (row: Match) => row.weight, sortable: true, grow: 1 },
+    { name: '경기 시간 (초)', selector: (row: Match) => row.duration, sortable: true, grow: 1 },
     { name: '라운드 횟수', selector: (row: Match) => row.rounds, sortable: true, grow: 1 },
   ]
 
@@ -100,7 +101,7 @@ const MatchListPage = () => {
   ]
   
   const graphqlOption = {
-    query: listMatches,
+    query: listMatchesWithCodeDetails,
     options: {
       filter: {
         tournamentMatchesId: {
@@ -110,7 +111,7 @@ const MatchListPage = () => {
     },
     name: "listMatches"
   }
-  const sortBy = ["matchType","weight"]
+  const sortBy = ["matchType.sortOrder", "weight"]
 
   return (
     <main className="main">
@@ -127,7 +128,7 @@ const MatchListPage = () => {
           columns={columns}
           buttons={buttons}
           graphqlOption={graphqlOption}
-          //sortBy={sortBy}
+          sortBy={sortBy}
           selectableRowsSingle={false}
         />
       </Article>

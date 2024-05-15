@@ -100,7 +100,7 @@ export default function FormField(props: IFormFieldProps) {
       value={value}
       onChange={onChangeHandler}>
       <option key='' value=''></option>
-    {
+      {
         props.config.field.options?.map(option => (
           (typeof option === "string") ? (
             <option key={option} value={option}>{option}</option>

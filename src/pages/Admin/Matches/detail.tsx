@@ -6,7 +6,7 @@ import * as yup from 'yup';
 import { v4 as uuid } from 'uuid'
 import { FcInspection } from 'react-icons/fc'
 import { getMatch } from "graphql/queries"
-import { getCodeTableId, getCodeDetailOptions } from "services/codeTableHelper"
+import { getCodeDetailOptions, CodeDetailOption } from "services/codeTableHelper"
 import { createMatch, updateMatch } from 'graphql/mutations'
 import FormBuilder, { TFormBuilderConfig } from 'component/formBuilder'
 import Article from 'component/article'
@@ -42,34 +42,25 @@ type MatchDataTable = {
   rounds: number 
 }
 
-type Option = {
-  id: string,
-  value: string
-}
-
 export default function MatchDetailPage () {
   const params = useParams()
   const navigate = useNavigate()
   const [match, setMatch] = useState<MatchDataTable>({} as MatchDataTable)
   const [loading, setloading] = useState(true)
   const [config, setConfig] = useState<TFormBuilderConfig | null>(null)
-  const [matchTypeOptions, setMatchTypeOptions] = useState<Option[]>([])
-  const [tournamentTypeOptions, setTournamentTypeOptions] = useState<Option[]>([])
-
-  useEffect(() => {
-    const getCodeData = async() => {
-      let id1: string = await getCodeTableId("대전 종별") ?? ""
-      let options1: Option[] = await getCodeDetailOptions(id1)
-      setMatchTypeOptions(options1)
-
-      let id2: string = await getCodeTableId("경기 방식") ?? ""
-      let options2: Option[] = await getCodeDetailOptions(id2)
-      setTournamentTypeOptions(options2)
+  const [matchTypeOptions, setMatchTypeOptions] = useState<CodeDetailOption[]>([])
+  const [tournamentTypeOptions, setTournamentTypeOptions] = useState<CodeDetailOption[]>([])
+  /**
+   * Use Effect to get codeDetails
+   */
+  useEffect( () => {
+    const getCodeDetails = async () => {
+      setMatchTypeOptions(await getCodeDetailOptions('matchType'))
+      setTournamentTypeOptions(await getCodeDetailOptions('tournamentType'))
     }
 
-    getCodeData()
+    getCodeDetails()
   }, [])
-
   /**
    * Use Effect to update formik based on Match Data
    */
@@ -134,14 +125,13 @@ export default function MatchDetailPage () {
 
     const fields = () => {
       const fieldList = []
-
       fieldList.push({ id: 'id', fieldType: 'hidden' })
       fieldList.push({ id: 'tournamentId', fieldType: 'hidden' })
-      fieldList.push({ id: 'matchType', fieldType: 'select', label: '대전 종별', options: matchTypeOptions })
-      fieldList.push({ id: 'tournamentType', fieldType: 'select', label: '경기 방식', options: tournamentTypeOptions })
-      fieldList.push({ id: 'duration', fieldType: 'text', label: '경기 시간' })
+      fieldList.push({ id: 'matchType.id', fieldType: 'select', label: '대전 종별', options: matchTypeOptions })
+      fieldList.push({ id: 'tournamentType.id', fieldType: 'select', label: '경기 방식', options: tournamentTypeOptions })
+      fieldList.push({ id: 'duration', fieldType: 'text', label: '경기 시간 (초)' })
       fieldList.push({ id: 'rounds', fieldType: 'text', label: '라운드 횟수' })
-      fieldList.push({ id: 'weight', fieldType: 'text', label: '체급' })
+      fieldList.push({ id: 'weight', fieldType: 'text', label: '체급 (Kg)' })
       
       return fieldList;
     }
@@ -160,7 +150,7 @@ export default function MatchDetailPage () {
         match === undefined || 
         match === null || 
         match.id === undefined || 
-        match.id === null ? '신규 단체 추가' : '단체 정보 변경',
+        match.id === null ? '신규 대전 추가' : '대전 정보 변경',
       fields: fields(),
       buttons: {
         submitEnabled: true,

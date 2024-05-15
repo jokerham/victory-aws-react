@@ -2,6 +2,12 @@ import { generateClient } from '@aws-amplify/api'
 import { listCodeTables, listCodeDetails } from 'graphql/queries'
 import 'configureAmplify'
 
+type CodeDetailOption = {
+  id: string,
+  value: string,
+  sortOrder: number
+}
+
 const getCodeTableId = async function(name: string) {
   const client = generateClient()
   const codeTable = await client.graphql({
@@ -14,11 +20,13 @@ const getCodeTableId = async function(name: string) {
   })
 
   const items = codeTable.data.listCodeTables.items
-  return items.length > 0 ? items[0].id : null;
+  return items.length > 0 ? items[0].id : null
 }
 
-const getCodeDetailOptions = async function(codeTableId: string) {
+const getCodeDetailOptions = async function(codeTableName: string) {
   const client = generateClient()
+  const codeTableId = await getCodeTableId(codeTableName)
+  //console.log(codeTableId)
   const codeDetails = await client.graphql({
     query: listCodeDetails,
     variables: {
@@ -29,18 +37,20 @@ const getCodeDetailOptions = async function(codeTableId: string) {
   })
 
   const items = codeDetails.data.listCodeDetails.items
+  //console.log(items)
 
-  return items.length === 0 ?
+  let codeDetailOptions: CodeDetailOption[] = items.length === 0 ?
     [] : items.map(item => (
     {
       id: item.id,
       value: item.name,
       sortOrder: item.sortOrder
     }
-  )
-)
+  ))
 
-  
+  codeDetailOptions.sort((a, b) => a.sortOrder - b.sortOrder)
+  return codeDetailOptions
 }
 
 export { getCodeTableId, getCodeDetailOptions }
+export type { CodeDetailOption }

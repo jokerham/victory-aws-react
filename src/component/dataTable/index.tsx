@@ -62,9 +62,11 @@ const DataTableComponent = (props: IDataTableProps) => {
               aValue = aValue[key]
               bValue = bValue[key]
             }
-
             if (aValue < bValue) return -1
             if (aValue > bValue) return 1
+
+            aValue = a
+            bValue = b
           }
           return 0
         })
@@ -84,7 +86,7 @@ const DataTableComponent = (props: IDataTableProps) => {
             {query: graphqlOption.query, variables: graphqlOption.options}
           //console.log(query)
           const result = await client.graphql(query)
-          console.log(result)
+          //console.log(result)
           
           if ('data' in result) {
             nextToken = result.data[graphqlOption.name].nextToken
@@ -93,7 +95,7 @@ const DataTableComponent = (props: IDataTableProps) => {
           }
         } while (nextToken)
         data = sortData(data)
-        console.log(data)
+        //console.log(data)
         setData(data)
       } catch (error: any) {
         console.log(error)

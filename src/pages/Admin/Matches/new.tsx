@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { generateClient } from '@aws-amplify/api'
-import { batchCreateMatches } from "graphql/mutations"
+import { createMatch } from "graphql/mutations"
 import { FormikValues } from "formik"
 import * as yup from 'yup'
 import { FcInspection } from 'react-icons/fc'
 import FormBuilder, { TFormBuilderConfig } from 'component/formBuilder'
 import Article from 'component/article'
 import { showToastMessage } from 'component/toastMessage'
-import { getCodeTableId, getCodeDetailOptions } from "services/codeTableHelper"
+import { getCodeDetailOptions, CodeDetailOption } from "services/codeTableHelper"
 import 'configureAmplify'
 
 type ErrorObject = {
@@ -30,33 +30,23 @@ type ResponseData = {
   errors: ErrorObject[]
 }
 
-type Option = {
-  id: string,
-  value: string
-}
 
 const CreateMatchPage = () => {
   const params = useParams()
   const navigate = useNavigate()
   const [loading, setloading] = useState(true)
   const [config, setConfig] = useState<TFormBuilderConfig | null>(null)
-  const [matchTypeOptions, setMatchTypeOptions] = useState<Option[]>([])
-  const [tournamentTypeOptions, setTournamentTypeOptions] = useState<Option[]>([])
-  const client = generateClient()
+  const [matchTypeOptions, setMatchTypeOptions] = useState<CodeDetailOption[]>([])
+  const [tournamentTypeOptions, setTournamentTypeOptions] = useState<CodeDetailOption[]>([])
   const tournamentId = params.id
 
   useEffect(() => {
-    const getCodeData = async() => {
-      let id1: string = await getCodeTableId("대전 종별") ?? ""
-      let options1: Option[] = await getCodeDetailOptions(id1)
-      setMatchTypeOptions(options1)
-
-      let id2: string = await getCodeTableId("경기 방식") ?? ""
-      let options2: Option[] = await getCodeDetailOptions(id2)
-      setTournamentTypeOptions(options2)
+    const getCodeDetails = async () => {
+      setMatchTypeOptions(await getCodeDetailOptions('matchType'))
+      setTournamentTypeOptions(await getCodeDetailOptions('tournamentType'))
     }
 
-    getCodeData()
+    getCodeDetails()
   }, [])
 
   useEffect(() => {
@@ -77,11 +67,11 @@ const CreateMatchPage = () => {
       fieldList.push({ id: 'tournamentId', fieldType: 'hidden'})
       fieldList.push({ id: 'matchType', fieldType: 'select', label: '대전 종별', options: matchTypeOptions })
       fieldList.push({ id: 'tournamentType', fieldType: 'select', label: '경기 방식', options: tournamentTypeOptions })
-      fieldList.push({ id: 'duration', fieldType: 'number', label: '경기 시간' })
+      fieldList.push({ id: 'duration', fieldType: 'number', label: '경기 시간 (초)' })
       fieldList.push({ id: 'rounds', fieldType: 'number', label: '라운드 횟수' })
-      fieldList.push({ id: 'startWeight', fieldType: 'number', label: '시작 체급' })
-      fieldList.push({ id: 'endWeight', fieldType: 'number', label: '종료 체급' })
-      fieldList.push({ id: 'unit', fieldType: 'number', label: '체급간 간격' })
+      fieldList.push({ id: 'startWeight', fieldType: 'number', label: '시작 체급 (Kg)' })
+      fieldList.push({ id: 'endWeight', fieldType: 'number', label: '종료 체급 (Kg)' })
+      fieldList.push({ id: 'unit', fieldType: 'number', label: '체급간 간격 (Kg)' })
       
       return fieldList;
     }
@@ -99,22 +89,36 @@ const CreateMatchPage = () => {
     const submitHandler = async(values: FormikValues) => {
       try {
         await validationSchema.validate(values, {abortEarly: false});
-        await client.graphql({
-          query: batchCreateMatches,
-          variables: { input: {
-            tournamentId: tournamentId ?? "",
-            matchType: values.matchType,
-            tournamentType: values.tournamentType,
-            duration: values.duration,
-            rounds: values.rounds,
-            startWeight: values.startWeight,
-            endWeight: values.endWeight,
-            unit: values.unit
-          } },
-          authMode: 'userPool'
+
+        const client = generateClient()
+        const matches = []
+        
+        for(let weight: number = parseInt(values.startWeight); weight <= parseInt(values.endWeight); weight = weight + parseInt(values.unit)) {
+          const match = {
+            tournamentMatchesId: tournamentId,
+            matchMatchTypeId: values.matchType,
+            matchTournamentTypeId: values.tournamentType,
+            rounds: parseInt(values.rounds),
+            duration: parseInt(values.duration),
+            weight
+          }
+          matches.push(match)
+        }
+
+        const createPromises = matches.map(async(match) => {
+          await client.graphql({
+            query: createMatch,
+            variables: { input: match },
+            authMode: 'userPool'
+          })
         })
+
+        await Promise.all(createPromises)
+        
         navigate(`/admin/tournament/matches/${tournamentId}`);
       } catch (e) {
+        console.log(e)
+
         for(const error of (e as ResponseData)?.errors) {
           showToastMessage(error.message, "error")
         }
