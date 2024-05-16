@@ -20,12 +20,14 @@ export const getInstitute = /* GraphQL */ `query GetInstitute($id: ID!) {
       name
       email
       contact
+      birthday
       weight
       approved
       profileImageUrl
       createdAt
       updatedAt
       instituteMembersId
+      memberGenderId
       memberInstituteId
       __typename
     }
@@ -128,6 +130,7 @@ export const getMember = /* GraphQL */ `query GetMember($id: ID!) {
     name
     email
     contact
+    birthday
     institute {
       id
       sport
@@ -140,11 +143,22 @@ export const getMember = /* GraphQL */ `query GetMember($id: ID!) {
       __typename
     }
     weight
+    gender {
+      id
+      name
+      value
+      sortOrder
+      createdAt
+      updatedAt
+      codeTableDetailsId
+      __typename
+    }
     approved
     profileImageUrl
     createdAt
     updatedAt
     instituteMembersId
+    memberGenderId
     memberInstituteId
     __typename
   }
@@ -162,12 +176,14 @@ export const listMembers = /* GraphQL */ `query ListMembers(
       name
       email
       contact
+      birthday
       weight
       approved
       profileImageUrl
       createdAt
       updatedAt
       instituteMembersId
+      memberGenderId
       memberInstituteId
       __typename
     }
@@ -201,12 +217,14 @@ export const listMembersByApproved = /* GraphQL */ `query ListMembersByApproved(
       name
       email
       contact
+      birthday
       weight
       approved
       profileImageUrl
       createdAt
       updatedAt
       instituteMembersId
+      memberGenderId
       memberInstituteId
       __typename
     }
@@ -240,12 +258,14 @@ export const searchMembers = /* GraphQL */ `query SearchMembers(
       name
       email
       contact
+      birthday
       weight
       approved
       profileImageUrl
       createdAt
       updatedAt
       instituteMembersId
+      memberGenderId
       memberInstituteId
       __typename
     }

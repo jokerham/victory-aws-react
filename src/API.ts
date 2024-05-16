@@ -24,6 +24,7 @@ export type ModelMemberFilterInput = {
   name?: ModelStringInput | null,
   email?: ModelStringInput | null,
   contact?: ModelStringInput | null,
+  birthday?: ModelStringInput | null,
   weight?: ModelFloatInput | null,
   approved?: ModelStringInput | null,
   profileImageUrl?: ModelStringInput | null,
@@ -33,6 +34,7 @@ export type ModelMemberFilterInput = {
   or?: Array< ModelMemberFilterInput | null > | null,
   not?: ModelMemberFilterInput | null,
   instituteMembersId?: ModelIDInput | null,
+  memberGenderId?: ModelIDInput | null,
   memberInstituteId?: ModelIDInput | null,
 };
 
@@ -117,13 +119,16 @@ export type Member = {
   name: string,
   email: string,
   contact?: string | null,
+  birthday?: string | null,
   institute?: Institute | null,
   weight?: number | null,
+  gender?: CodeDetail | null,
   approved?: string | null,
   profileImageUrl?: string | null,
   createdAt: string,
   updatedAt: string,
   instituteMembersId?: string | null,
+  memberGenderId?: string | null,
   memberInstituteId?: string | null,
 };
 
@@ -139,6 +144,33 @@ export type Institute = {
   updatedAt: string,
   instituteRepresentativeId?: string | null,
   representativeId?: string | null,
+};
+
+export type CodeDetail = {
+  __typename: "CodeDetail",
+  id: string,
+  codeTable?: CodeTable | null,
+  name: string,
+  value: string,
+  sortOrder: number,
+  createdAt: string,
+  updatedAt: string,
+  codeTableDetailsId?: string | null,
+};
+
+export type CodeTable = {
+  __typename: "CodeTable",
+  id: string,
+  name: string,
+  details?: ModelCodeDetailConnection | null,
+  createdAt: string,
+  updatedAt: string,
+};
+
+export type ModelCodeDetailConnection = {
+  __typename: "ModelCodeDetailConnection",
+  items:  Array<CodeDetail | null >,
+  nextToken?: string | null,
 };
 
 export type ModelInstituteFilterInput = {
@@ -159,6 +191,68 @@ export type ModelInstituteConnection = {
   __typename: "ModelInstituteConnection",
   items:  Array<Institute | null >,
   nextToken?: string | null,
+};
+
+export type ModelMatchFilterInput = {
+  id?: ModelIDInput | null,
+  weight?: ModelFloatInput | null,
+  duration?: ModelIntInput | null,
+  rounds?: ModelIntInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
+  and?: Array< ModelMatchFilterInput | null > | null,
+  or?: Array< ModelMatchFilterInput | null > | null,
+  not?: ModelMatchFilterInput | null,
+  tournamentMatchesId?: ModelIDInput | null,
+  matchMatchTypeId?: ModelIDInput | null,
+  matchTournamentTypeId?: ModelIDInput | null,
+};
+
+export type ModelIntInput = {
+  ne?: number | null,
+  eq?: number | null,
+  le?: number | null,
+  lt?: number | null,
+  ge?: number | null,
+  gt?: number | null,
+  between?: Array< number | null > | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+};
+
+export type ModelMatchConnection = {
+  __typename: "ModelMatchConnection",
+  items:  Array<Match | null >,
+  nextToken?: string | null,
+};
+
+export type Match = {
+  __typename: "Match",
+  id: string,
+  tournament?: Tournament | null,
+  matchType?: CodeDetail | null,
+  weight: number,
+  tournamentType?: CodeDetail | null,
+  duration?: number | null,
+  rounds?: number | null,
+  createdAt: string,
+  updatedAt: string,
+  tournamentMatchesId?: string | null,
+  matchMatchTypeId?: string | null,
+  matchTournamentTypeId?: string | null,
+};
+
+export type Tournament = {
+  __typename: "Tournament",
+  id: string,
+  title: string,
+  location?: string | null,
+  eventDate?: string | null,
+  dueDate?: string | null,
+  rings?: number | null,
+  Matches?: ModelMatchConnection | null,
+  createdAt: string,
+  updatedAt: string,
 };
 
 export type CreateInstituteInput = {
@@ -200,10 +294,12 @@ export type CreateMemberInput = {
   name: string,
   email: string,
   contact?: string | null,
+  birthday?: string | null,
   weight?: number | null,
   approved?: string | null,
   profileImageUrl?: string | null,
   instituteMembersId?: string | null,
+  memberGenderId?: string | null,
   memberInstituteId?: string | null,
 };
 
@@ -212,6 +308,7 @@ export type ModelMemberConditionInput = {
   name?: ModelStringInput | null,
   email?: ModelStringInput | null,
   contact?: ModelStringInput | null,
+  birthday?: ModelStringInput | null,
   weight?: ModelFloatInput | null,
   approved?: ModelStringInput | null,
   profileImageUrl?: ModelStringInput | null,
@@ -221,6 +318,7 @@ export type ModelMemberConditionInput = {
   createdAt?: ModelStringInput | null,
   updatedAt?: ModelStringInput | null,
   instituteMembersId?: ModelIDInput | null,
+  memberGenderId?: ModelIDInput | null,
   memberInstituteId?: ModelIDInput | null,
 };
 
@@ -230,10 +328,12 @@ export type UpdateMemberInput = {
   name?: string | null,
   email?: string | null,
   contact?: string | null,
+  birthday?: string | null,
   weight?: number | null,
   approved?: string | null,
   profileImageUrl?: string | null,
   instituteMembersId?: string | null,
+  memberGenderId?: string | null,
   memberInstituteId?: string | null,
 };
 
@@ -253,33 +353,6 @@ export type ModelCodeTableConditionInput = {
   not?: ModelCodeTableConditionInput | null,
   createdAt?: ModelStringInput | null,
   updatedAt?: ModelStringInput | null,
-};
-
-export type CodeTable = {
-  __typename: "CodeTable",
-  id: string,
-  name: string,
-  details?: ModelCodeDetailConnection | null,
-  createdAt: string,
-  updatedAt: string,
-};
-
-export type ModelCodeDetailConnection = {
-  __typename: "ModelCodeDetailConnection",
-  items:  Array<CodeDetail | null >,
-  nextToken?: string | null,
-};
-
-export type CodeDetail = {
-  __typename: "CodeDetail",
-  id: string,
-  codeTable?: CodeTable | null,
-  name: string,
-  value: string,
-  sortOrder: number,
-  createdAt: string,
-  updatedAt: string,
-  codeTableDetailsId?: string | null,
 };
 
 export type UpdateCodeTableInput = {
@@ -309,18 +382,6 @@ export type ModelCodeDetailConditionInput = {
   createdAt?: ModelStringInput | null,
   updatedAt?: ModelStringInput | null,
   codeTableDetailsId?: ModelIDInput | null,
-};
-
-export type ModelIntInput = {
-  ne?: number | null,
-  eq?: number | null,
-  le?: number | null,
-  lt?: number | null,
-  ge?: number | null,
-  gt?: number | null,
-  between?: Array< number | null > | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
 };
 
 export type UpdateCodeDetailInput = {
@@ -355,41 +416,6 @@ export type ModelTournamentConditionInput = {
   not?: ModelTournamentConditionInput | null,
   createdAt?: ModelStringInput | null,
   updatedAt?: ModelStringInput | null,
-};
-
-export type Tournament = {
-  __typename: "Tournament",
-  id: string,
-  title: string,
-  location?: string | null,
-  eventDate?: string | null,
-  dueDate?: string | null,
-  rings?: number | null,
-  Matches?: ModelMatchConnection | null,
-  createdAt: string,
-  updatedAt: string,
-};
-
-export type ModelMatchConnection = {
-  __typename: "ModelMatchConnection",
-  items:  Array<Match | null >,
-  nextToken?: string | null,
-};
-
-export type Match = {
-  __typename: "Match",
-  id: string,
-  tournament?: Tournament | null,
-  matchType?: CodeDetail | null,
-  weight: number,
-  tournamentType?: CodeDetail | null,
-  duration?: number | null,
-  rounds?: number | null,
-  createdAt: string,
-  updatedAt: string,
-  tournamentMatchesId?: string | null,
-  matchMatchTypeId?: string | null,
-  matchTournamentTypeId?: string | null,
 };
 
 export type UpdateTournamentInput = {
@@ -595,12 +621,14 @@ export type SearchableMemberFilterInput = {
   name?: SearchableStringFilterInput | null,
   email?: SearchableStringFilterInput | null,
   contact?: SearchableStringFilterInput | null,
+  birthday?: SearchableStringFilterInput | null,
   weight?: SearchableFloatFilterInput | null,
   approved?: SearchableStringFilterInput | null,
   profileImageUrl?: SearchableStringFilterInput | null,
   createdAt?: SearchableStringFilterInput | null,
   updatedAt?: SearchableStringFilterInput | null,
   instituteMembersId?: SearchableIDFilterInput | null,
+  memberGenderId?: SearchableIDFilterInput | null,
   memberInstituteId?: SearchableIDFilterInput | null,
   and?: Array< SearchableMemberFilterInput | null > | null,
   or?: Array< SearchableMemberFilterInput | null > | null,
@@ -628,12 +656,14 @@ export enum SearchableMemberSortableFields {
   name = "name",
   email = "email",
   contact = "contact",
+  birthday = "birthday",
   weight = "weight",
   approved = "approved",
   profileImageUrl = "profileImageUrl",
   createdAt = "createdAt",
   updatedAt = "updatedAt",
   instituteMembersId = "instituteMembersId",
+  memberGenderId = "memberGenderId",
   memberInstituteId = "memberInstituteId",
 }
 
@@ -650,12 +680,14 @@ export enum SearchableMemberAggregateField {
   name = "name",
   email = "email",
   contact = "contact",
+  birthday = "birthday",
   weight = "weight",
   approved = "approved",
   profileImageUrl = "profileImageUrl",
   createdAt = "createdAt",
   updatedAt = "updatedAt",
   instituteMembersId = "instituteMembersId",
+  memberGenderId = "memberGenderId",
   memberInstituteId = "memberInstituteId",
 }
 
@@ -838,21 +870,6 @@ export type SearchableTournamentConnection = {
   aggregateItems:  Array<SearchableAggregateResult | null >,
 };
 
-export type ModelMatchFilterInput = {
-  id?: ModelIDInput | null,
-  weight?: ModelFloatInput | null,
-  duration?: ModelIntInput | null,
-  rounds?: ModelIntInput | null,
-  createdAt?: ModelStringInput | null,
-  updatedAt?: ModelStringInput | null,
-  and?: Array< ModelMatchFilterInput | null > | null,
-  or?: Array< ModelMatchFilterInput | null > | null,
-  not?: ModelMatchFilterInput | null,
-  tournamentMatchesId?: ModelIDInput | null,
-  matchMatchTypeId?: ModelIDInput | null,
-  matchTournamentTypeId?: ModelIDInput | null,
-};
-
 export type SearchableMatchFilterInput = {
   id?: SearchableIDFilterInput | null,
   weight?: SearchableFloatFilterInput | null,
@@ -962,6 +979,7 @@ export type ModelSubscriptionMemberFilterInput = {
   name?: ModelSubscriptionStringInput | null,
   email?: ModelSubscriptionStringInput | null,
   contact?: ModelSubscriptionStringInput | null,
+  birthday?: ModelSubscriptionStringInput | null,
   weight?: ModelSubscriptionFloatInput | null,
   approved?: ModelSubscriptionStringInput | null,
   profileImageUrl?: ModelSubscriptionStringInput | null,
@@ -969,6 +987,7 @@ export type ModelSubscriptionMemberFilterInput = {
   updatedAt?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionMemberFilterInput | null > | null,
   or?: Array< ModelSubscriptionMemberFilterInput | null > | null,
+  memberGenderId?: ModelSubscriptionIDInput | null,
   memberInstituteId?: ModelSubscriptionIDInput | null,
   congnitoId?: ModelStringInput | null,
 };
@@ -1096,6 +1115,40 @@ export type listInstitutesWithRepresentativeNameQuery = {
   } | null,
 };
 
+export type listMatchesWithCodeDetailsQueryVariables = {
+  filter?: ModelMatchFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type listMatchesWithCodeDetailsQuery = {
+  listMatches?:  {
+    __typename: "ModelMatchConnection",
+    items:  Array< {
+      __typename: "Match",
+      id: string,
+      weight: number,
+      duration?: number | null,
+      rounds?: number | null,
+      createdAt: string,
+      updatedAt: string,
+      tournamentMatchesId?: string | null,
+      matchMatchTypeId?: string | null,
+      matchTournamentTypeId?: string | null,
+      matchType?:  {
+        __typename: "CodeDetail",
+        name: string,
+        sortOrder: number,
+      } | null,
+      tournamentType?:  {
+        __typename: "CodeDetail",
+        name: string,
+      } | null,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
 export type CreateInstituteMutationVariables = {
   input: CreateInstituteInput,
   condition?: ModelInstituteConditionInput | null,
@@ -1115,12 +1168,14 @@ export type CreateInstituteMutation = {
       name: string,
       email: string,
       contact?: string | null,
+      birthday?: string | null,
       weight?: number | null,
       approved?: string | null,
       profileImageUrl?: string | null,
       createdAt: string,
       updatedAt: string,
       instituteMembersId?: string | null,
+      memberGenderId?: string | null,
       memberInstituteId?: string | null,
     } | null,
     members?:  {
@@ -1153,12 +1208,14 @@ export type UpdateInstituteMutation = {
       name: string,
       email: string,
       contact?: string | null,
+      birthday?: string | null,
       weight?: number | null,
       approved?: string | null,
       profileImageUrl?: string | null,
       createdAt: string,
       updatedAt: string,
       instituteMembersId?: string | null,
+      memberGenderId?: string | null,
       memberInstituteId?: string | null,
     } | null,
     members?:  {
@@ -1191,12 +1248,14 @@ export type DeleteInstituteMutation = {
       name: string,
       email: string,
       contact?: string | null,
+      birthday?: string | null,
       weight?: number | null,
       approved?: string | null,
       profileImageUrl?: string | null,
       createdAt: string,
       updatedAt: string,
       instituteMembersId?: string | null,
+      memberGenderId?: string | null,
       memberInstituteId?: string | null,
     } | null,
     members?:  {
@@ -1223,6 +1282,7 @@ export type CreateMemberMutation = {
     name: string,
     email: string,
     contact?: string | null,
+    birthday?: string | null,
     institute?:  {
       __typename: "Institute",
       id: string,
@@ -1235,11 +1295,22 @@ export type CreateMemberMutation = {
       representativeId?: string | null,
     } | null,
     weight?: number | null,
+    gender?:  {
+      __typename: "CodeDetail",
+      id: string,
+      name: string,
+      value: string,
+      sortOrder: number,
+      createdAt: string,
+      updatedAt: string,
+      codeTableDetailsId?: string | null,
+    } | null,
     approved?: string | null,
     profileImageUrl?: string | null,
     createdAt: string,
     updatedAt: string,
     instituteMembersId?: string | null,
+    memberGenderId?: string | null,
     memberInstituteId?: string | null,
   } | null,
 };
@@ -1257,6 +1328,7 @@ export type UpdateMemberMutation = {
     name: string,
     email: string,
     contact?: string | null,
+    birthday?: string | null,
     institute?:  {
       __typename: "Institute",
       id: string,
@@ -1269,11 +1341,22 @@ export type UpdateMemberMutation = {
       representativeId?: string | null,
     } | null,
     weight?: number | null,
+    gender?:  {
+      __typename: "CodeDetail",
+      id: string,
+      name: string,
+      value: string,
+      sortOrder: number,
+      createdAt: string,
+      updatedAt: string,
+      codeTableDetailsId?: string | null,
+    } | null,
     approved?: string | null,
     profileImageUrl?: string | null,
     createdAt: string,
     updatedAt: string,
     instituteMembersId?: string | null,
+    memberGenderId?: string | null,
     memberInstituteId?: string | null,
   } | null,
 };
@@ -1291,6 +1374,7 @@ export type DeleteMemberMutation = {
     name: string,
     email: string,
     contact?: string | null,
+    birthday?: string | null,
     institute?:  {
       __typename: "Institute",
       id: string,
@@ -1303,11 +1387,22 @@ export type DeleteMemberMutation = {
       representativeId?: string | null,
     } | null,
     weight?: number | null,
+    gender?:  {
+      __typename: "CodeDetail",
+      id: string,
+      name: string,
+      value: string,
+      sortOrder: number,
+      createdAt: string,
+      updatedAt: string,
+      codeTableDetailsId?: string | null,
+    } | null,
     approved?: string | null,
     profileImageUrl?: string | null,
     createdAt: string,
     updatedAt: string,
     instituteMembersId?: string | null,
+    memberGenderId?: string | null,
     memberInstituteId?: string | null,
   } | null,
 };
@@ -1696,12 +1791,14 @@ export type GetInstituteQuery = {
       name: string,
       email: string,
       contact?: string | null,
+      birthday?: string | null,
       weight?: number | null,
       approved?: string | null,
       profileImageUrl?: string | null,
       createdAt: string,
       updatedAt: string,
       instituteMembersId?: string | null,
+      memberGenderId?: string | null,
       memberInstituteId?: string | null,
     } | null,
     members?:  {
@@ -1795,6 +1892,7 @@ export type GetMemberQuery = {
     name: string,
     email: string,
     contact?: string | null,
+    birthday?: string | null,
     institute?:  {
       __typename: "Institute",
       id: string,
@@ -1807,11 +1905,22 @@ export type GetMemberQuery = {
       representativeId?: string | null,
     } | null,
     weight?: number | null,
+    gender?:  {
+      __typename: "CodeDetail",
+      id: string,
+      name: string,
+      value: string,
+      sortOrder: number,
+      createdAt: string,
+      updatedAt: string,
+      codeTableDetailsId?: string | null,
+    } | null,
     approved?: string | null,
     profileImageUrl?: string | null,
     createdAt: string,
     updatedAt: string,
     instituteMembersId?: string | null,
+    memberGenderId?: string | null,
     memberInstituteId?: string | null,
   } | null,
 };
@@ -1832,12 +1941,14 @@ export type ListMembersQuery = {
       name: string,
       email: string,
       contact?: string | null,
+      birthday?: string | null,
       weight?: number | null,
       approved?: string | null,
       profileImageUrl?: string | null,
       createdAt: string,
       updatedAt: string,
       instituteMembersId?: string | null,
+      memberGenderId?: string | null,
       memberInstituteId?: string | null,
     } | null >,
     nextToken?: string | null,
@@ -1863,12 +1974,14 @@ export type ListMembersByApprovedQuery = {
       name: string,
       email: string,
       contact?: string | null,
+      birthday?: string | null,
       weight?: number | null,
       approved?: string | null,
       profileImageUrl?: string | null,
       createdAt: string,
       updatedAt: string,
       instituteMembersId?: string | null,
+      memberGenderId?: string | null,
       memberInstituteId?: string | null,
     } | null >,
     nextToken?: string | null,
@@ -1894,12 +2007,14 @@ export type SearchMembersQuery = {
       name: string,
       email: string,
       contact?: string | null,
+      birthday?: string | null,
       weight?: number | null,
       approved?: string | null,
       profileImageUrl?: string | null,
       createdAt: string,
       updatedAt: string,
       instituteMembersId?: string | null,
+      memberGenderId?: string | null,
       memberInstituteId?: string | null,
     } | null >,
     nextToken?: string | null,
@@ -2280,12 +2395,14 @@ export type OnCreateInstituteSubscription = {
       name: string,
       email: string,
       contact?: string | null,
+      birthday?: string | null,
       weight?: number | null,
       approved?: string | null,
       profileImageUrl?: string | null,
       createdAt: string,
       updatedAt: string,
       instituteMembersId?: string | null,
+      memberGenderId?: string | null,
       memberInstituteId?: string | null,
     } | null,
     members?:  {
@@ -2318,12 +2435,14 @@ export type OnUpdateInstituteSubscription = {
       name: string,
       email: string,
       contact?: string | null,
+      birthday?: string | null,
       weight?: number | null,
       approved?: string | null,
       profileImageUrl?: string | null,
       createdAt: string,
       updatedAt: string,
       instituteMembersId?: string | null,
+      memberGenderId?: string | null,
       memberInstituteId?: string | null,
     } | null,
     members?:  {
@@ -2356,12 +2475,14 @@ export type OnDeleteInstituteSubscription = {
       name: string,
       email: string,
       contact?: string | null,
+      birthday?: string | null,
       weight?: number | null,
       approved?: string | null,
       profileImageUrl?: string | null,
       createdAt: string,
       updatedAt: string,
       instituteMembersId?: string | null,
+      memberGenderId?: string | null,
       memberInstituteId?: string | null,
     } | null,
     members?:  {
@@ -2388,6 +2509,7 @@ export type OnCreateMemberSubscription = {
     name: string,
     email: string,
     contact?: string | null,
+    birthday?: string | null,
     institute?:  {
       __typename: "Institute",
       id: string,
@@ -2400,11 +2522,22 @@ export type OnCreateMemberSubscription = {
       representativeId?: string | null,
     } | null,
     weight?: number | null,
+    gender?:  {
+      __typename: "CodeDetail",
+      id: string,
+      name: string,
+      value: string,
+      sortOrder: number,
+      createdAt: string,
+      updatedAt: string,
+      codeTableDetailsId?: string | null,
+    } | null,
     approved?: string | null,
     profileImageUrl?: string | null,
     createdAt: string,
     updatedAt: string,
     instituteMembersId?: string | null,
+    memberGenderId?: string | null,
     memberInstituteId?: string | null,
   } | null,
 };
@@ -2422,6 +2555,7 @@ export type OnUpdateMemberSubscription = {
     name: string,
     email: string,
     contact?: string | null,
+    birthday?: string | null,
     institute?:  {
       __typename: "Institute",
       id: string,
@@ -2434,11 +2568,22 @@ export type OnUpdateMemberSubscription = {
       representativeId?: string | null,
     } | null,
     weight?: number | null,
+    gender?:  {
+      __typename: "CodeDetail",
+      id: string,
+      name: string,
+      value: string,
+      sortOrder: number,
+      createdAt: string,
+      updatedAt: string,
+      codeTableDetailsId?: string | null,
+    } | null,
     approved?: string | null,
     profileImageUrl?: string | null,
     createdAt: string,
     updatedAt: string,
     instituteMembersId?: string | null,
+    memberGenderId?: string | null,
     memberInstituteId?: string | null,
   } | null,
 };
@@ -2456,6 +2601,7 @@ export type OnDeleteMemberSubscription = {
     name: string,
     email: string,
     contact?: string | null,
+    birthday?: string | null,
     institute?:  {
       __typename: "Institute",
       id: string,
@@ -2468,11 +2614,22 @@ export type OnDeleteMemberSubscription = {
       representativeId?: string | null,
     } | null,
     weight?: number | null,
+    gender?:  {
+      __typename: "CodeDetail",
+      id: string,
+      name: string,
+      value: string,
+      sortOrder: number,
+      createdAt: string,
+      updatedAt: string,
+      codeTableDetailsId?: string | null,
+    } | null,
     approved?: string | null,
     profileImageUrl?: string | null,
     createdAt: string,
     updatedAt: string,
     instituteMembersId?: string | null,
+    memberGenderId?: string | null,
     memberInstituteId?: string | null,
   } | null,
 };

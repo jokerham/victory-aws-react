@@ -11,6 +11,7 @@ import { createMember, updateMember } from 'graphql/mutations'
 import { Article, FormBuilder, InstituteSelector, TFormBuilderConfig, showToastMessage } from 'component'
 import 'configureAmplify'
 import { Member } from 'API'
+import { CodeDetailOption, getCodeDetailOptions } from 'services/codeTableHelper'
 
 type ErrorObject = {
   path: null;
@@ -37,6 +38,18 @@ export default function MemberDetailPage () {
   const [member, setMember] = useState<Member>({} as Member)
   const [loading, setloading] = useState(true)
   const [config, setConfig] = useState<TFormBuilderConfig | null>(null)
+  const [genderOptions, setGenderoptions] = useState<CodeDetailOption[]>([])
+  
+  /**
+   * Use Effect to get codeDetails
+   */
+  useEffect( () => {
+    const getCodeDetails = async () => {
+      setGenderoptions(await getCodeDetailOptions('gender'))
+    }
+
+    getCodeDetails()
+  }, [])
   
   /**
    * Use Effect to update formik based on Member Data
@@ -56,6 +69,8 @@ export default function MemberDetailPage () {
             email: values.email,
             contact: values.contact,
             memberInstituteId: values.institute.id,
+            birthday: values.birthday,
+            memberGenderId: values.gender.id,
             weight: isNaN(weight) ? 0 : weight,
             approved: "unapproved",
             profileImageUrl: profileImageUrl ?? undefined
@@ -75,6 +90,8 @@ export default function MemberDetailPage () {
             email: values.email,
             contact: values.contact,
             memberInstituteId: values.institute.id,
+            birthday: values.birthday,
+            memberGenderId: values.gender.id,
             weight: isNaN(weight) ? 0 : weight,
             approved: values.approved,
             profileImageUrl: profileImageUrl ?? member.profileImageUrl
@@ -109,6 +126,11 @@ export default function MemberDetailPage () {
         id: '',
         title: '',
       },
+      birthday: '',
+      gender: {
+        id: '',
+        value: ''
+      },
       weight: 0,
       approved: 'false',
       profileImageUrl: ''
@@ -123,6 +145,8 @@ export default function MemberDetailPage () {
       fieldList.push({ id: 'contact', fieldType: 'text', label: '연락처' })
       fieldList.push({ id: 'institute.id', fieldType: 'hidden' })
       fieldList.push({ id: 'institute.title', fieldType: 'popup', label: '단체명', options: ["institute.id"], popup: (InstituteSelector) })
+      fieldList.push({ id: 'birthday', fieldType: 'date', label: '생일' })
+      fieldList.push({ id: 'gender.id', fieldType: 'select', label: '성별', options: genderOptions })
       fieldList.push({ id: 'weight', fieldType: 'text', label: '체급' })
 
       if (member === null || member.id === undefined || member.id === null) {
@@ -181,7 +205,7 @@ export default function MemberDetailPage () {
     setConfig(config)
     setloading(false);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [member])
+  }, [member, genderOptions])
 
   /**
    * Use Effect to get Member Data from Params

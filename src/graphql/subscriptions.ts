@@ -23,12 +23,14 @@ export const onCreateInstitute = /* GraphQL */ `subscription OnCreateInstitute(
       name
       email
       contact
+      birthday
       weight
       approved
       profileImageUrl
       createdAt
       updatedAt
       instituteMembersId
+      memberGenderId
       memberInstituteId
       __typename
     }
@@ -62,12 +64,14 @@ export const onUpdateInstitute = /* GraphQL */ `subscription OnUpdateInstitute(
       name
       email
       contact
+      birthday
       weight
       approved
       profileImageUrl
       createdAt
       updatedAt
       instituteMembersId
+      memberGenderId
       memberInstituteId
       __typename
     }
@@ -101,12 +105,14 @@ export const onDeleteInstitute = /* GraphQL */ `subscription OnDeleteInstitute(
       name
       email
       contact
+      birthday
       weight
       approved
       profileImageUrl
       createdAt
       updatedAt
       instituteMembersId
+      memberGenderId
       memberInstituteId
       __typename
     }
@@ -135,6 +141,7 @@ export const onCreateMember = /* GraphQL */ `subscription OnCreateMember(
     name
     email
     contact
+    birthday
     institute {
       id
       sport
@@ -147,11 +154,22 @@ export const onCreateMember = /* GraphQL */ `subscription OnCreateMember(
       __typename
     }
     weight
+    gender {
+      id
+      name
+      value
+      sortOrder
+      createdAt
+      updatedAt
+      codeTableDetailsId
+      __typename
+    }
     approved
     profileImageUrl
     createdAt
     updatedAt
     instituteMembersId
+    memberGenderId
     memberInstituteId
     __typename
   }
@@ -170,6 +188,7 @@ export const onUpdateMember = /* GraphQL */ `subscription OnUpdateMember(
     name
     email
     contact
+    birthday
     institute {
       id
       sport
@@ -182,11 +201,22 @@ export const onUpdateMember = /* GraphQL */ `subscription OnUpdateMember(
       __typename
     }
     weight
+    gender {
+      id
+      name
+      value
+      sortOrder
+      createdAt
+      updatedAt
+      codeTableDetailsId
+      __typename
+    }
     approved
     profileImageUrl
     createdAt
     updatedAt
     instituteMembersId
+    memberGenderId
     memberInstituteId
     __typename
   }
@@ -205,6 +235,7 @@ export const onDeleteMember = /* GraphQL */ `subscription OnDeleteMember(
     name
     email
     contact
+    birthday
     institute {
       id
       sport
@@ -217,11 +248,22 @@ export const onDeleteMember = /* GraphQL */ `subscription OnDeleteMember(
       __typename
     }
     weight
+    gender {
+      id
+      name
+      value
+      sortOrder
+      createdAt
+      updatedAt
+      codeTableDetailsId
+      __typename
+    }
     approved
     profileImageUrl
     createdAt
     updatedAt
     instituteMembersId
+    memberGenderId
     memberInstituteId
     __typename
   }

@@ -25,6 +25,10 @@ export const listMembersByApprovedWithInstituteTitle = /* GraphQL */ `query list
       name
       email
       contact
+      birthday
+      gender {
+        name
+      }
       institute {
         title
       }

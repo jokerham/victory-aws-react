@@ -33,8 +33,10 @@ input AMPLIFY { globalAuthRule: AuthRule = { allow: public } } # FOR TESTING ONL
     name: String!
     email: String!
     contact: String
+    birthday: AWSDate
     institute: Institute @belongsTo
     weight: Float
+    gender: CodeDetail @hasOne
     approved: String @index (name: "byApproved", sortKeyFields: ["name"], queryField: "listMembersByApproved")
     profileImageUrl: String
   }

@@ -23,12 +23,14 @@ export const createInstitute = /* GraphQL */ `mutation CreateInstitute(
       name
       email
       contact
+      birthday
       weight
       approved
       profileImageUrl
       createdAt
       updatedAt
       instituteMembersId
+      memberGenderId
       memberInstituteId
       __typename
     }
@@ -62,12 +64,14 @@ export const updateInstitute = /* GraphQL */ `mutation UpdateInstitute(
       name
       email
       contact
+      birthday
       weight
       approved
       profileImageUrl
       createdAt
       updatedAt
       instituteMembersId
+      memberGenderId
       memberInstituteId
       __typename
     }
@@ -101,12 +105,14 @@ export const deleteInstitute = /* GraphQL */ `mutation DeleteInstitute(
       name
       email
       contact
+      birthday
       weight
       approved
       profileImageUrl
       createdAt
       updatedAt
       instituteMembersId
+      memberGenderId
       memberInstituteId
       __typename
     }
@@ -135,6 +141,7 @@ export const createMember = /* GraphQL */ `mutation CreateMember(
     name
     email
     contact
+    birthday
     institute {
       id
       sport
@@ -147,11 +154,22 @@ export const createMember = /* GraphQL */ `mutation CreateMember(
       __typename
     }
     weight
+    gender {
+      id
+      name
+      value
+      sortOrder
+      createdAt
+      updatedAt
+      codeTableDetailsId
+      __typename
+    }
     approved
     profileImageUrl
     createdAt
     updatedAt
     instituteMembersId
+    memberGenderId
     memberInstituteId
     __typename
   }
@@ -170,6 +188,7 @@ export const updateMember = /* GraphQL */ `mutation UpdateMember(
     name
     email
     contact
+    birthday
     institute {
       id
       sport
@@ -182,11 +201,22 @@ export const updateMember = /* GraphQL */ `mutation UpdateMember(
       __typename
     }
     weight
+    gender {
+      id
+      name
+      value
+      sortOrder
+      createdAt
+      updatedAt
+      codeTableDetailsId
+      __typename
+    }
     approved
     profileImageUrl
     createdAt
     updatedAt
     instituteMembersId
+    memberGenderId
     memberInstituteId
     __typename
   }
@@ -205,6 +235,7 @@ export const deleteMember = /* GraphQL */ `mutation DeleteMember(
     name
     email
     contact
+    birthday
     institute {
       id
       sport
@@ -217,11 +248,22 @@ export const deleteMember = /* GraphQL */ `mutation DeleteMember(
       __typename
     }
     weight
+    gender {
+      id
+      name
+      value
+      sortOrder
+      createdAt
+      updatedAt
+      codeTableDetailsId
+      __typename
+    }
     approved
     profileImageUrl
     createdAt
     updatedAt
     instituteMembersId
+    memberGenderId
     memberInstituteId
     __typename
   }

@@ -9,6 +9,7 @@ import { deleteMember, createMember, updateMember } from 'graphql/mutations'
 import * as XLSX from 'xlsx'
 import { Article, DataTable, FileUploader, showToastMessage } from 'component'
 import "aws-exports"
+import { getCodeDetailOptions } from 'services/codeTableHelper';
 
 type ErrorObject = {
   path: null,
@@ -31,6 +32,10 @@ type MemberDataTable = {
     title: string
   },
   weight: number,
+  gender: {
+    name: string
+  },
+  birthday: Date,
   approved: string,
   profileImageUrl: string,
 }
@@ -41,6 +46,8 @@ type MemberCsvRecord = {
   contact?: string,
   instituteName?: string,
   instituteLocation?: string,
+  genderName?: string,
+  birthday?: string,
 }
 
 const MemberListPage = ({params}: {params: {approved: string}}) => {
@@ -53,6 +60,8 @@ const MemberListPage = ({params}: {params: {approved: string}}) => {
     { name: 'id', selector: (row: MemberDataTable) => row.id, omit: true },
     { name: '이름', selector: (row: MemberDataTable) => row.name, sortable: true, grow: 1 },
     { name: '단체', selector: (row: MemberDataTable) => row.institute?.title, sortable: true, grow: 1 },
+    { name: '생일', selector: (row: MemberDataTable) => row.birthday, sortable: true, grow: 1 },
+    { name: '성별', selector: (row: MemberDataTable) => row.gender?.name, sortable: true, grow: 1 },
     { name: '이메일', selector: (row: MemberDataTable) => row.email, sortable: true, grow: 1 },
     { name: '연락처', selector: (row: MemberDataTable) => row.contact, sortable: true, grow: 1 },
   ];
@@ -136,9 +145,9 @@ const MemberListPage = ({params}: {params: {approved: string}}) => {
         const [keys, ...values] = jsonData;
 
         const members = values.map((row: any[]) => {
-          let obj: MemberCsvRecord = {name: '', email: ''};
+          let obj: MemberCsvRecord = {name: '', email: '', genderName: ''};
           keys.forEach((key, index) => {
-            if (["name","email","contact","instituteName","instituteLocation"].includes(key)) {
+            if (["name","email","contact","instituteName","instituteLocation","genderName","birthday"].includes(key)) {
               // eslint-disable-next-line no-eval
               eval("obj."+key+"=row[index]")
             }
@@ -150,19 +159,33 @@ const MemberListPage = ({params}: {params: {approved: string}}) => {
         let institutes = await client.graphql({
           query: listInstitutes,
           authMode: 'userPool'
-        });
-
+        })
+        const genders = await getCodeDetailOptions('gender')
         const createPromises = members.map(async (member) => {
-          let newMember = {...member, approved: "approved", memberInstituteId: ''}
+          let newMember = {...member, approved: "approved", memberInstituteId: '', memberGenderId: ''}
+
+          // find institute id
           if (member.instituteName !== '' && member.instituteLocation !== '') {
             const institute = institutes.data.listInstitutes.items.find(
-              obj => obj.title === member.instituteName && obj.location === member.instituteLocation);
+              obj => obj.title === member.instituteName && obj.location === member.instituteLocation)
             if (institute) {
-              newMember.memberInstituteId = institute.id;
+              newMember.memberInstituteId = institute.id
             }
           }
-          delete newMember.instituteName;
-          delete newMember.instituteLocation;
+          // find gender
+          if (member.genderName !== '') {
+            const gender = genders.find(obj => 
+              obj.value === member.genderName
+            )
+            if (gender) {
+              newMember.memberGenderId = gender.id
+            }
+          }
+
+          // cast birthday
+          delete newMember.instituteName
+          delete newMember.instituteLocation
+          delete newMember.genderName
 
           await client.graphql({
             query: createMember,
@@ -171,7 +194,11 @@ const MemberListPage = ({params}: {params: {approved: string}}) => {
           })
         })
         
-        await Promise.all(createPromises)
+        try {
+          await Promise.all(createPromises)
+        } catch (error) {
+          console.log(error)
+        }
         setRefreshKey(refreshKey+1)
       }
     };
