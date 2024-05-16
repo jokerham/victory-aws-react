@@ -75,7 +75,7 @@ const DataTableComponent = (props: IDataTableProps) => {
     }
 
     const fetchData = async() => {
-      console.log(["Fetch request", graphqlOption.query, graphqlOption.options])
+      //console.log(["Fetch request", graphqlOption.query, graphqlOption.options])
       const client = generateClient();
       try {
         let nextToken = null;
