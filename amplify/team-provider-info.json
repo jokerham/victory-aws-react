@@ -21,16 +21,6 @@
       "storage": {
         "images": {}
       },
-      "function": {
-        "dashboardHeaderCounts": {
-          "deploymentBucketName": "amplify-victory-dev-215317-deployment",
-          "s3Key": "amplify-builds/dashboardHeaderCounts-2b35567664466d643861-build.zip"
-        },
-        "createMatches": {
-          "deploymentBucketName": "amplify-victory-dev-215317-deployment",
-          "s3Key": "amplify-builds/createMatches-365068656a3572676871-build.zip"
-        }
-      },
       "hosting": {
         "amplifyhosting": {
           "appId": "d2on2dgggqhiyb",
